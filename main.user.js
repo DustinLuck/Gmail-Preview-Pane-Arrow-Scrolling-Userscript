@@ -96,8 +96,9 @@ function ScrollPreviewPane(scrollValue)
 {
     var elemsPreviewPanes = getElementsByClassName("apN");
     for (var x = 0; x < elemsPreviewPanes.length; x++) {
-        if (elemsPreviewPanes[x].parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display != "none") {
+        if (elemsPreviewPanes[x].clientHeight) {
             elemPreviewPane = elemsPreviewPanes[x];
+            break;
         }
     }
     elemPreviewPane.scrollTop += scrollValue;
