@@ -3,7 +3,7 @@
 // @namespace   http://userscripts.org/users/109864
 // @include     https://mail.google.com/*
 // @grant       none
-// @version     0.2.2013.604
+// @version     0.2.2018.510
 // ==/UserScript==
 
 function getElementsByClassName(className, parentNode)
@@ -45,6 +45,7 @@ function handleKeyPress(e)
     if (e.target.nodeName.match(/^(textarea|input)$/i) ||
          e.target.className.match(/(^|\\s)editable(\\s|$)/i) ||
          targRole === "textbox" ||
+         targRole === "menu" ||
          (targRole === "button" && targToolTip === "Show trimmed content"))
     {
         return;
