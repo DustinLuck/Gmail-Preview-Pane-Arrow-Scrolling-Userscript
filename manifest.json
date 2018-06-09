@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "Gmail Preview Pane Arrow Scrolling",
+  "version": "0.3.2019.0207",
+   "browser_action": {
+   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*"
+      ],
+      "js": ["main.user.js"]
+    }
+  ]
+}
