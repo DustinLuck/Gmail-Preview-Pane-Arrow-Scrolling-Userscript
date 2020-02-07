@@ -35,6 +35,7 @@ function handleKeyPress(e)
     var targAttr = e.target.attributes;
     var targRole = "";
     var targToolTip = "";
+    var rolesToIgnore = ["textbox", "combobox", "menu"];
     try {
         targRole = targAttr.getNamedItem("role").value;
         targToolTip = targAttr.getNamedItem("data-tooltip").value;
@@ -43,9 +44,8 @@ function handleKeyPress(e)
         //do nothing
     }
     if (e.target.nodeName.match(/^(textarea|input)$/i) ||
-         e.target.className.match(/(^|\\s)editable(\\s|$)/i) ||
-         targRole === "textbox" ||
-         targRole === "menu" ||
+         e.target.className.match(/(^|\s)editable(\s|$)/i) ||
+         rolesToIgnore.includes(targRole) ||
          (targRole === "button" && targToolTip === "Show trimmed content"))
     {
         return;
