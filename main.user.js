@@ -3,7 +3,7 @@
 // @namespace   http://userscripts.org/users/109864
 // @include     https://mail.google.com/*
 // @grant       none
-// @version     0.2.2018.510
+// @version     0.3.2019.0207
 // ==/UserScript==
 
 function getElementsByClassName(className, parentNode)
@@ -95,7 +95,7 @@ if (e.charCode||e.which) {console.log(keyCombo + " (" + (e.charCode||e.which) + 
 
 function ScrollPreviewPane(scrollValue)
 {
-    var elemsPreviewPanes = getElementsByClassName("apN");
+    var elemsPreviewPanes = getElementsByClassName("S3");
     for (var x = 0; x < elemsPreviewPanes.length; x++) {
         if (elemsPreviewPanes[x].clientHeight) {
             elemPreviewPane = elemsPreviewPanes[x];
