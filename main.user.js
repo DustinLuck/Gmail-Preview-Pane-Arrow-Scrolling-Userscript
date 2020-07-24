@@ -66,25 +66,25 @@ function handleKeyPress(e)
     }else{
         keyCombo = String.fromCharCode(e.charCode||e.which).toLowerCase();
     }
-    if (e.shiftKey) { 
+    if (e.shiftKey) {
         keyCombo = "Shift+" + keyCombo;
     }
-    if (e.altKey) { 
+    if (e.altKey) {
         keyCombo = "Alt+" + keyCombo;
     }
-    if (e.ctrlKey) { 
+    if (e.ctrlKey) {
         keyCombo = "Ctrl+" + keyCombo;
     }
 
     switch(keyCombo) {
     case "UP":
-        ScrollPreviewPane(-25);
+        override = ScrollPreviewPane(-25);
         break;
     case "DOWN":
-        ScrollPreviewPane(25);
+        override = ScrollPreviewPane(25);
         break;
     default:
-if (e.charCode||e.which) {console.log(keyCombo + " (" + (e.charCode||e.which) + ")\r\n");}
+        if (e.charCode||e.which) {console.log(keyCombo + " (" + (e.charCode||e.which) + ")\r\n");}
         return;
     }
     if (override) {
@@ -96,13 +96,16 @@ if (e.charCode||e.which) {console.log(keyCombo + " (" + (e.charCode||e.which) + 
 function ScrollPreviewPane(scrollValue)
 {
     var elemsPreviewPanes = getElementsByClassName("S3");
+    // Opening new lists (e.g. by clicking a label) creates more of these views.
+    // Only the active one (if any) will have a client height.
+    // There won't be an active one on pages like Settings.
     for (var x = 0; x < elemsPreviewPanes.length; x++) {
         if (elemsPreviewPanes[x].clientHeight) {
-            elemPreviewPane = elemsPreviewPanes[x];
-            break;
+            elemsPreviewPanes[x].scrollTop += scrollValue;
+            return true;
         }
     }
-    elemPreviewPane.scrollTop += scrollValue;
+    return false;
 }
 
 document.addEventListener('keypress', handleKeyPress, true);
