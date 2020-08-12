@@ -34,19 +34,31 @@ function handleKeyPress(e)
 {
     var targAttr = e.target.attributes;
     var targRole = "";
-    var targToolTip = "";
-    var rolesToIgnore = ["textbox", "combobox", "menu"];
+    var rolesToIgnore = ["textbox", "combobox", "menu", "menuitem", "menuitemradio", "button"];
+    
     try {
         targRole = targAttr.getNamedItem("role").value;
-        targToolTip = targAttr.getNamedItem("data-tooltip").value;
     }
     catch(err) {
         //do nothing
     }
-    if (e.target.nodeName.match(/^(textarea|input)$/i) ||
-         e.target.className.match(/(^|\s)editable(\s|$)/i) ||
-         rolesToIgnore.includes(targRole) ||
-         (targRole === "button" && targToolTip === "Show trimmed content"))
+
+    var targParent = e.target.parentNode;
+    var parentAttr = targParent.attributes;
+    var parentRole = "";
+    var parentRolesToIgnore = ["alert", "dialog"];
+
+    try {
+        parentRole = parentAttr.getNamedItem("role").value;
+    }
+    catch(err) {
+        //do nothing
+    }
+
+    if (e.target.nodeName.match(/^(textarea|input)$/i)
+     || rolesToIgnore.includes(targRole)
+     || parentRolesToIgnore.includes(parentRole)
+       )
     {
         return;
     }
