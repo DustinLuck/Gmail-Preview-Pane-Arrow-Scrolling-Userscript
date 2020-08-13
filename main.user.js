@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name        Gmail Preview Pane Arrow Scrolling
-// @namespace   http://userscripts.org/users/109864
+// @namespace   https://github.com/DustinLuck/
 // @include     https://mail.google.com/*
 // @grant       none
-// @version     0.3.2019.0207
+// @version     0.4.2020.0813
 // ==/UserScript==
+
+var elemPreviewPane = null;
 
 function getElementsByClassName(className, parentNode)
 {
@@ -30,93 +32,59 @@ function getElementsByClassName(className, parentNode)
     return elements;
 }
 
-function handleKeyPress(e)
+function handleKeyDown(e)
 {
-    var targAttr = e.target.attributes;
-    var targRole = "";
+    var nodesToIgnore = ["textarea", "input"];
     var rolesToIgnore = ["textbox", "combobox", "menu", "menuitem", "menuitemradio", "button"];
-    
-    try {
-        targRole = targAttr.getNamedItem("role").value;
-    }
-    catch(err) {
-        //do nothing
-    }
+    var parentRolesToIgnore = ["alert", "dialog"];
+
+    var targAttr = e.target.attributes;
+    var targRole = targAttr.getNamedItem("role")?.value;
 
     var targParent = e.target.parentNode;
     var parentAttr = targParent.attributes;
-    var parentRole = "";
-    var parentRolesToIgnore = ["alert", "dialog"];
-
-    try {
-        parentRole = parentAttr.getNamedItem("role").value;
-    }
-    catch(err) {
-        //do nothing
-    }
-
-    if ((e.target.nodeName.match(/^(textarea|input)$/i)
+    var parentRole = parentAttr.getNamedItem("role")?.value;
+    
+    if ((e.shiftKey
+      || e.altKey
+      || e.ctrlKey
+      || nodesToIgnore.includes(e.target.nodeName.toLowerCase())
       || rolesToIgnore.includes(targRole)
       || parentRolesToIgnore.includes(parentRole)
         )
-     && !targParent.className.match(/(^|\s)ajU(\s|$)/i)
+     && !targParent.classList.contains("ajU")
     ) {
         return;
     }
-    var override = true;
-    var keyCombo = "";
-    if (e.keyCode) {
-        switch(e.keyCode) {
-        case 38: //up arrow
-            keyCombo = "UP";
-            break;
-        case 40: //down arrow
-            keyCombo = "DOWN";
+
+    var scrollDirection = 1;
+    switch(e.key) {
+        case "ArrowUp": //up arrow
+            scrollDirection = -1;
+        case "ArrowDown": //down arrow
+            if (SetPreviewPane()) {
+                ScrollPreviewPane(scrollDirection);
+                e.preventDefault();
+                e.stopPropagation();
+            }
             break;
         default:
             return;
         }
-    }else{
-        keyCombo = String.fromCharCode(e.charCode||e.which).toLowerCase();
-    }
-    if (e.shiftKey) { 
-        keyCombo = "Shift+" + keyCombo;
-    }
-    if (e.altKey) { 
-        keyCombo = "Alt+" + keyCombo;
-    }
-    if (e.ctrlKey) { 
-        keyCombo = "Ctrl+" + keyCombo;
-    }
 
-    switch(keyCombo) {
-    case "UP":
-        ScrollPreviewPane(-25);
-        break;
-    case "DOWN":
-        ScrollPreviewPane(25);
-        break;
-    default:
-if (e.charCode||e.which) {console.log(keyCombo + " (" + (e.charCode||e.which) + ")\r\n");}
-        return;
-    }
-    if (override) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
 }
 
-function ScrollPreviewPane(scrollValue)
+function SetPreviewPane()
 {
-    var elemsPreviewPanes = getElementsByClassName("S3");
-    for (var x = 0; x < elemsPreviewPanes.length; x++) {
-        if (elemsPreviewPanes[x].clientHeight) {
-            elemPreviewPane = elemsPreviewPanes[x];
-            break;
-        }
-    }
-    elemPreviewPane.scrollTop += scrollValue;
+    return (elemPreviewPane = getElementsByClassName("S3")[0]); // Nu S3 aZ6
 }
 
-document.addEventListener('keypress', handleKeyPress, true);
-document.addEventListener('keydown', handleKeyPress, true);
+function ScrollPreviewPane(scrollDirection)
+{
+    var scrollValue = 25 * scrollDirection;
+    if (elemPreviewPane) {
+        elemPreviewPane.scrollTop += scrollValue;
+    }
+}
+
+document.addEventListener('keydown', handleKeyDown, true);
