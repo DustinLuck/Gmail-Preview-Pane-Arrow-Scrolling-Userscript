@@ -55,11 +55,12 @@ function handleKeyPress(e)
         //do nothing
     }
 
-    if (e.target.nodeName.match(/^(textarea|input)$/i)
-     || rolesToIgnore.includes(targRole)
-     || parentRolesToIgnore.includes(parentRole)
-       )
-    {
+    if ((e.target.nodeName.match(/^(textarea|input)$/i)
+      || rolesToIgnore.includes(targRole)
+      || parentRolesToIgnore.includes(parentRole)
+        )
+     && !targParent.className.match(/(^|\s)ajU(\s|$)/i)
+    ) {
         return;
     }
     var override = true;
