@@ -3,34 +3,10 @@
 // @namespace   https://github.com/DustinLuck/
 // @include     https://mail.google.com/*
 // @grant       none
-// @version     0.4.2020.0813
+// @version     0.5.2023.0925
 // ==/UserScript==
 
 var elemPreviewPane = null;
-
-function getElementsByClassName(className, parentNode)
-{
-    var elements = [];
-    var parent = parentNode;
-    if (parentNode == undefined) {
-        parent = document.body;
-    }
-    if (parent.getElementsByClassName != undefined) {
-        return parent.getElementsByClassName(className);
-    }
-
-    if (parent.getElementsByTagName == undefined) {
-        return elements;
-    }
-    var children = parent.getElementsByTagName('*');
-    for (var i = 0; i < children.length; i ++) {
-        var child = children[i];
-        if (child.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"))) {
-            elements[elements.length] = child;
-        }
-    }
-    return elements;
-}
 
 function handleKeyDown(e)
 {
@@ -76,7 +52,7 @@ function handleKeyDown(e)
 
 function SetPreviewPane()
 {
-    return (elemPreviewPane = getElementsByClassName("S3")[0]); // Nu S3 aZ6
+    return (elemPreviewPane = document.getElementsByClassName("S3")[0]); // Nu S3 aZ6
 }
 
 function ScrollPreviewPane(scrollDirection)
